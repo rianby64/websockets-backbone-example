@@ -56,7 +56,7 @@
       queue(); // call->queue
     }
     // bind->queue
-    function queue(index=0) {
+    function queue(index) {
       index = index || 0;
       if (index >= ws.queue.length) return;
       if (ws.queue[index].sent) {}
