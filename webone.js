@@ -22,7 +22,8 @@
       sent: false,
       data: (method == 'update') ? (model.changed) : (options.attrs || model.toJSON(options))
     }
-    
+
+    if ((method == 'update') && (_.size(params.data) == 0)) { return; };
     if (!options.url) params.url =  _.result(model, 'url') || urlError();
     if (!options.curl) params.curl = (model instanceof Backbone.Collection) ? 
       _.result(model, 'url') : (model.collection == undefined) ? '' : _.result(model.collection, 'url');
@@ -47,9 +48,15 @@
     else options.params = _.defaults(options.params, params);
     if (!ws.queue) ws.queue = []; // process any request in the queue FIFO
     ws.queue.push(options);
-    
+
     if (ws.onopen == null) { ws.onopen = open; } // bind->open
     else if (ws.readyState == 1) { queue(); } // call->queue
+    ws.onerror = function(event) { // what should I do if error?
+      console.log(event);
+    }
+    ws.onclose = function(event) { // what should I do if close?
+      console.log(event);
+    }
 
     // bind->open
     function open(event) {
