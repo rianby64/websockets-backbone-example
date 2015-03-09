@@ -49,7 +49,8 @@
     if (!ws.queue) ws.queue = []; // process any request in the queue FIFO
     ws.queue.push(options);
 
-    if (ws.onopen == null) { ws.onopen = open; } // bind->open
+    if ((ws.onopen == null) && (ws.readyState == 1)) { ws.onopen = open; open(); }
+    else if (ws.onopen == null) { ws.onopen = open; } // bind->open
     else if (ws.readyState == 1) { queue(); } // call->queue
     ws.onerror = function(event) { // what should I do if error?
       console.log(event);
